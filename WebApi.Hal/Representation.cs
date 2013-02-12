@@ -1,15 +1,25 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using WebApi.Hal.Interfaces;
 
+#endregion
+
 namespace WebApi.Hal
 {
+    public abstract class Representation<TModel> : Representation where TModel : class
+    {
+        [JsonIgnore]
+        public TModel Model { get; set; }
+    }
+
     public abstract class Representation : IResource
     {
-        string href;
         bool creatingHyperMedia;
-        string rel;
+        string href;
         string linkName;
+        string rel;
         bool selfLinkUpToDate;
 
         protected Representation()

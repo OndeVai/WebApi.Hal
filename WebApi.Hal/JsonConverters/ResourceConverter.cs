@@ -1,6 +1,10 @@
+#region
+
 using System;
 using Newtonsoft.Json;
 using WebApi.Hal.Interfaces;
+
+#endregion
 
 namespace WebApi.Hal.JsonConverters
 {
@@ -8,13 +12,9 @@ namespace WebApi.Hal.JsonConverters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var resource = (Representation)value;
+            var resource = (Representation) value;
 
-            resource.Links.Insert(0, new Link
-                                   {
-                                       Rel = "self",
-                                       Href = resource.Href
-                                   });
+            AddSelfLink(resource);
 
             serializer.Converters.Remove(this);
             serializer.Serialize(writer, resource);
@@ -29,17 +29,21 @@ namespace WebApi.Hal.JsonConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return IsResource(objectType) && !IsResourceList(objectType);
+            return objectType.IsResource() && !objectType.IsResourceList() && !objectType.IsResourceTyped();
         }
 
-        static bool IsResourceList(Type objectType)
+        protected bool IsResourceList(Type objectType)
         {
-            return typeof(IRepresentationList).IsAssignableFrom(objectType);
+            return typeof (IRepresentationList).IsAssignableFrom(objectType);
         }
 
-        static bool IsResource(Type objectType)
+        protected void AddSelfLink(Representation resource)
         {
-            return typeof(Representation).IsAssignableFrom(objectType);
+            resource.Links.Insert(0, new Link
+            {
+                Rel = "self",
+                Href = resource.Href
+            });
         }
     }
 }

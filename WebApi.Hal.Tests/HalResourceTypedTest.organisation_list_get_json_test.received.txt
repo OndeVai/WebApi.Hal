@@ -1,0 +1,135 @@
+{
+  "_links": {
+    "self": {
+      "href": "/api/organisations"
+    }
+  },
+  "_embedded": {
+    "organisations": [
+      {
+        "Id": 1,
+        "Name": "Org Name",
+        "Employees": [
+          {
+            "Id": 1,
+            "Title": "emp1",
+            "Rank": 1,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/1",
+                "IsTemplated": false
+              }
+            ]
+          },
+          {
+            "Id": 11,
+            "Title": "emp2",
+            "Rank": 2,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/11",
+                "IsTemplated": false
+              }
+            ]
+          },
+          {
+            "Id": 12,
+            "Title": "emp1",
+            "Rank": 4,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/12",
+                "IsTemplated": false
+              }
+            ]
+          }
+        ],
+        "_links": [
+          {
+            "Rel": "self",
+            "Href": "/api/organisations/1",
+            "IsTemplated": false
+          },
+          {
+            "Rel": "related",
+            "Href": "/api/other",
+            "IsTemplated": false
+          }
+        ]
+      },
+      {
+        "Id": 1,
+        "Name": "Org Name",
+        "Employees": [
+          {
+            "Id": 1,
+            "Title": "emp1",
+            "Rank": 1,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/1",
+                "IsTemplated": false
+              },
+              {
+                "Rel": "self",
+                "Href": "/api/employees/1",
+                "IsTemplated": false
+              }
+            ]
+          },
+          {
+            "Id": 11,
+            "Title": "emp2",
+            "Rank": 2,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/11",
+                "IsTemplated": false
+              },
+              {
+                "Rel": "self",
+                "Href": "/api/employees/11",
+                "IsTemplated": false
+              }
+            ]
+          },
+          {
+            "Id": 12,
+            "Title": "emp1",
+            "Rank": 4,
+            "_links": [
+              {
+                "Rel": "self",
+                "Href": "/api/employees/12",
+                "IsTemplated": false
+              },
+              {
+                "Rel": "self",
+                "Href": "/api/employees/12",
+                "IsTemplated": false
+              }
+            ]
+          }
+        ],
+        "_links": [
+          {
+            "Rel": "self",
+            "Href": "/api/organisations/1",
+            "IsTemplated": false
+          },
+          {
+            "Rel": "related",
+            "Href": "/api/other",
+            "IsTemplated": false
+          }
+        ]
+      }
+    ]
+  },
+  "count": 0
+}

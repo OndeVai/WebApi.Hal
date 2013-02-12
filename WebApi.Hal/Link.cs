@@ -1,13 +1,18 @@
+#region
+
 using System;
 using System.Text.RegularExpressions;
 using System.Web;
+
+#endregion
 
 namespace WebApi.Hal
 {
     public class Link
     {
         public Link()
-        { }
+        {
+        }
 
         public Link(string rel, string href)
         {
@@ -24,11 +29,13 @@ namespace WebApi.Hal
         public bool IsTemplated { get; set; }
 
         /// <summary>
-        /// If this link is templated, you can use this method to make a non templated copy
+        ///     If this link is templated, you can use this method to make a non templated copy
         /// </summary>
         /// <param name="newRel">A different rel</param>
-        /// <param name="substitutions">Pass in substitutions like 'name=>"Value"', 
-        /// if you have a conflicting variable like page, you can do '_page => page + 1'</param>
+        /// <param name="substitutions">
+        ///     Pass in substitutions like 'name=>"Value"',
+        ///     if you have a conflicting variable like page, you can do '_page => page + 1'
+        /// </param>
         /// <returns>A non templated link</returns>
         public Link CreateLink(string newRel, params Func<string, object>[] substitutions)
         {
@@ -36,10 +43,12 @@ namespace WebApi.Hal
         }
 
         /// <summary>
-        /// If this link is templated, you can use this method to make a non templated copy
+        ///     If this link is templated, you can use this method to make a non templated copy
         /// </summary>
-        /// <param name="substitutions">Pass in substitutions like 'name=>"Value"', 
-        /// if you have a conflicting variable like page, you can do '_page => page + 1'</param>
+        /// <param name="substitutions">
+        ///     Pass in substitutions like 'name=>"Value"',
+        ///     if you have a conflicting variable like page, you can do '_page => page + 1'
+        /// </param>
         /// <returns>A non templated link</returns>
         public Link CreateLink(params Func<string, object>[] substitutions)
         {

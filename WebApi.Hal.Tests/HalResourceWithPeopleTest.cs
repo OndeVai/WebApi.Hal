@@ -1,9 +1,13 @@
-﻿using System.IO;
+﻿#region
+
+using System.IO;
 using System.Net.Http;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using WebApi.Hal.Tests.Representations;
 using Xunit;
+
+#endregion
 
 namespace WebApi.Hal.Tests
 {
@@ -17,11 +21,11 @@ namespace WebApi.Hal.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
+        [UseReporter(typeof (DiffReporter))]
         public void organisation_get_json_test()
         {
             // arrange
-            var mediaFormatter = new JsonHalMediaTypeFormatter { Indent = true };
+            var mediaFormatter = new JsonHalMediaTypeFormatter {Indent = true};
             var content = new StringContent(string.Empty);
             var type = resource.GetType();
 
@@ -38,7 +42,7 @@ namespace WebApi.Hal.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
+        [UseReporter(typeof (DiffReporter))]
         public void organisation_get_xml_test()
         {
             // arrange
@@ -56,6 +60,6 @@ namespace WebApi.Hal.Tests
                 // assert
                 Approvals.Verify(serialisedResult);
             }
-        } 
+        }
     }
 }

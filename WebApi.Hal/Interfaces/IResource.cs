@@ -1,5 +1,9 @@
+#region
+
 using System.Collections.Generic;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace WebApi.Hal.Interfaces
 {

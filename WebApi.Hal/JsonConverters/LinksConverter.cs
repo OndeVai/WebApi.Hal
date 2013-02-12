@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace WebApi.Hal.JsonConverters
 {
@@ -8,7 +12,7 @@ namespace WebApi.Hal.JsonConverters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var links = (IList<Link>)value;
+            var links = (IList<Link>) value;
             writer.WriteStartObject();
 
             foreach (var link in links)
@@ -29,14 +33,15 @@ namespace WebApi.Hal.JsonConverters
             writer.WriteEndObject();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                                        JsonSerializer serializer)
         {
             return reader.Value;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IList<Link>).IsAssignableFrom(objectType);
+            return typeof (IList<Link>).IsAssignableFrom(objectType);
         }
     }
 }

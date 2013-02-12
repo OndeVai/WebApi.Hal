@@ -1,14 +1,18 @@
+#region
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+#endregion
+
 namespace WebApi.Hal
 {
     public class HypermediaList : IList<Link>
     {
-        readonly Action onEnumerate;
         readonly List<Link> innerList;
+        readonly Action onEnumerate;
 
         public HypermediaList(Action onEnumerate)
         {
@@ -62,7 +66,10 @@ namespace WebApi.Hal
             get { return innerList.Count; }
         }
 
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
 
         public int IndexOf(Link link)
         {

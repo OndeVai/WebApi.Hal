@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Web;
+
+#endregion
 
 namespace WebApi.Hal
 {
@@ -12,13 +16,14 @@ namespace WebApi.Hal
 
         public static Uri GetBaseUrl(this HttpRequestBase request)
         {
-            return new Uri(new Uri(request.GetOriginalUrl().GetLeftPart(UriPartial.Authority)), request.ApplicationPath ?? "");
+            return new Uri(new Uri(request.GetOriginalUrl().GetLeftPart(UriPartial.Authority)),
+                           request.ApplicationPath ?? "");
         }
 
         public static Uri GetOriginalUrl(this HttpRequestBase request)
         {
-            var hostUrl = new System.UriBuilder();
-            string hostHeader = request.Headers["Host"];
+            var hostUrl = new UriBuilder();
+            var hostHeader = request.Headers["Host"];
 
             if (hostHeader.Contains(":"))
             {
@@ -31,13 +36,14 @@ namespace WebApi.Hal
                 hostUrl.Port = -1;
             }
 
-            Uri url = request.Url;
-            var uriBuilder = new System.UriBuilder(url);
+            var url = request.Url;
+            var uriBuilder = new UriBuilder(url);
 
             // When the application is run behind a load-balancer (or forward proxy), request.IsSecureConnection returns 'true' or 'false'
             // based on the request from the load-balancer to the web server (e.g. IIS) and not the actual request to the load-balancer.
             // The same is also applied to request.Url.Scheme (or uriBuilder.Scheme, as in our case).
-            bool isSecureConnection = String.Equals(request.Headers["X-Forwarded-Proto"], "https", StringComparison.OrdinalIgnoreCase);
+            var isSecureConnection = String.Equals(request.Headers["X-Forwarded-Proto"], "https",
+                                                   StringComparison.OrdinalIgnoreCase);
 
             if (isSecureConnection)
             {

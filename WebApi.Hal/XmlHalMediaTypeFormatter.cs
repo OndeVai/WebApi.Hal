@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +13,8 @@ using System.Xml;
 using System.Xml.Linq;
 using WebApi.Hal.Interfaces;
 
+#endregion
+
 namespace WebApi.Hal
 {
     public class XmlHalMediaTypeFormatter : BufferedMediaTypeFormatter
@@ -20,13 +24,13 @@ namespace WebApi.Hal
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/hal+xml"));
         }
 
-        public override object ReadFromStream(Type type, Stream stream, HttpContent content, IFormatterLogger formatterLogger)
+        public override object ReadFromStream(Type type, Stream stream, HttpContent content,
+                                              IFormatterLogger formatterLogger)
         {
-            if (!typeof(Representation).IsAssignableFrom(type))
+            if (!type.IsResource())
             {
                 return null;
             }
-
             var xml = XElement.Load(stream);
             return ReadHalResource(type, xml);
         }
@@ -39,7 +43,7 @@ namespace WebApi.Hal
                 return;
             }
 
-            var settings = new XmlWriterSettings { Indent = true };
+            var settings = new XmlWriterSettings {Indent = true};
 
             var writer = XmlWriter.Create(stream, settings);
             WriteHalResource(resource, writer);
@@ -47,7 +51,7 @@ namespace WebApi.Hal
         }
 
         /// <summary>
-        /// ReadHalResource will
+        ///     ReadHalResource will
         /// </summary>
         /// <param name="type">Type of resource - Must be of type ApiResource</param>
         /// <param name="xml">xelement for the type</param>
@@ -62,18 +66,24 @@ namespace WebApi.Hal
             }
 
             // First, determine if Resource of type Generic List and construct Instance with respective Parameters
-            if (typeof(IRepresentationList).IsAssignableFrom(type))
+            if (type.IsResourceList())
             {
-                var resourceListXml = xml.Elements("resource");  // .Where(x => x.Attribute("rel").Value == "item");
+                var resourceListXml = xml.Elements("resource"); // .Where(x => x.Attribute("rel").Value == "item");
                 var genericTypeArg = type.GetGenericArguments().Single();
-                var resourceList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(genericTypeArg));
+                var resourceList = (IList) Activator.CreateInstance(typeof (List<>).MakeGenericType(genericTypeArg));
 
-                foreach (var resourceListItem in resourceListXml.Select(resourceXml => ReadHalResource(genericTypeArg, resourceXml)))
+                foreach (
+                    var resourceListItem in
+                        resourceListXml.Select(resourceXml => ReadHalResource(genericTypeArg, resourceXml)))
                 {
                     resourceList.Add(resourceListItem);
                 }
 
-                representation = Activator.CreateInstance(type, new object[] { resourceList }) as Representation;
+                representation = Activator.CreateInstance(type, new object[] {resourceList}) as Representation;
+            }
+            else if (type.IsResourceTyped())
+            {
+                throw new NotImplementedException("Typed resources are read only!");
             }
             else
             {
@@ -107,7 +117,7 @@ namespace WebApi.Hal
                 {
                     type.SetPropertyValue(property.Name, xml.Element(property.Name), representation);
                 }
-                else if (typeof(Representation).IsAssignableFrom(property.PropertyType) &&
+                else if (typeof (Representation).IsAssignableFrom(property.PropertyType) &&
                          property.GetIndexParameters().Length == 0)
                 {
                     var resourceXml =
@@ -166,25 +176,47 @@ namespace WebApi.Hal
             writer.WriteEndElement();
         }
 
-        static void WriteResourceProperties(Representation representation, XmlWriter writer)
+        static void WriteResourceProperties(Representation value, XmlWriter writer)
         {
-// Only simple type and nested ApiResource type will be handled : for any other type, exception will be thrown
+            var resourceType = value.GetType();
+            var allProps = resourceType.GetPublicInstanceProperties();
+
+            if (resourceType.IsResourceTyped())
+            {
+                var modelProp = allProps.First(p => p.IsModelProperty());
+                var modelValue = modelProp.GetValue(value, null);
+                var modelType = modelProp.PropertyType;
+
+                WriteResourceProperties(modelValue, writer, modelType.GetPublicInstanceProperties());
+
+                var propsOthers = allProps.Where(p => !p.IsModelProperty());
+                WriteResourceProperties(value, writer, propsOthers);
+            }
+            else
+            {
+                WriteResourceProperties(value, writer, allProps);
+            }
+        }
+
+        static void WriteResourceProperties(object value, XmlWriter writer, IEnumerable<PropertyInfo> propertyInfos)
+        {
+            // Only simple type and nested ApiResource type will be handled : for any other type, exception will be thrown
             // including List<ApiResource> as representation of List would require properties rel, href and linkname
             // To overcome the issue, use "RepresentationList<T>"
-            foreach (var property in representation.GetType().GetPublicInstanceProperties())
+            foreach (var property in propertyInfos)
             {
                 if (property.IsValidBasicType())
                 {
-                    var propertyString = GetPropertyString(property, representation);
+                    var propertyString = GetPropertyString(property, value);
                     if (propertyString != null)
                     {
                         writer.WriteElementString(property.Name, propertyString);
                     }
                 }
-                else if (typeof (Representation).IsAssignableFrom(property.PropertyType) &&
+                else if (property.PropertyType.IsResource() &&
                          property.GetIndexParameters().Length == 0)
                 {
-                    var halResource = property.GetValue(representation, null);
+                    var halResource = property.GetValue(value, null);
                     WriteHalResource((Representation) halResource, writer, property.Name);
                 }
             }
@@ -203,12 +235,12 @@ namespace WebApi.Hal
 
         public override bool CanReadType(Type type)
         {
-            return typeof(Representation).IsAssignableFrom(type);
+            return typeof (Representation).IsAssignableFrom(type);
         }
 
         public override bool CanWriteType(Type type)
         {
-            return typeof(Representation).IsAssignableFrom(type);
+            return typeof (Representation).IsAssignableFrom(type);
         }
     }
 }

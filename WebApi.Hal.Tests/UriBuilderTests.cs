@@ -1,5 +1,8 @@
-﻿using System;
+﻿#region
+
 using Xunit;
+
+#endregion
 
 namespace WebApi.Hal.Tests
 {

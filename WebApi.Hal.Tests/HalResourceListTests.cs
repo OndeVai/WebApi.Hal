@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using WebApi.Hal.Tests.Representations;
 using Xunit;
+
+#endregion
 
 namespace WebApi.Hal.Tests
 {
@@ -16,14 +20,14 @@ namespace WebApi.Hal.Tests
         {
             representation = new OrganisationListRepresentation(
                 new List<OrganisationRepresentation>
-                       {
-                           new OrganisationRepresentation(1, "Org1"),
-                           new OrganisationRepresentation(2, "Org2")
-                       });
+                {
+                    new OrganisationRepresentation(1, "Org1"),
+                    new OrganisationRepresentation(2, "Org2")
+                });
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
+        [UseReporter(typeof (DiffReporter))]
         public void organisation_list_get_xml_test()
         {
             // arrange
@@ -44,11 +48,11 @@ namespace WebApi.Hal.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
+        [UseReporter(typeof (DiffReporter))]
         public void organisation_list_get_json_test()
         {
             // arrange
-            var mediaFormatter = new JsonHalMediaTypeFormatter { Indent = true };
+            var mediaFormatter = new JsonHalMediaTypeFormatter {Indent = true};
             var content = new StringContent(string.Empty);
             var type = representation.GetType();
 

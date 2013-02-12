@@ -1,4 +1,8 @@
+#region
+
 using System.Collections.Generic;
+
+#endregion
 
 namespace WebApi.Hal.Tests.Representations
 {
@@ -7,8 +11,8 @@ namespace WebApi.Hal.Tests.Representations
         public OrganisationListRepresentation(IList<OrganisationRepresentation> organisationRepresentations) :
             base(organisationRepresentations)
         {
-            
         }
+
 
         protected override void CreateHypermedia()
         {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource rel="organisation" href="/api/organisations/1">
+  <link rel="related" href="/api/other" />
+  <Id>1</Id>
+  <Name>Org Name</Name>
+  <resource rel="employees" href="/api/employees" name="Employees">
+    <resource rel="" href="/api/employees/1">
+      <Id>1</Id>
+      <Title>emp1</Title>
+      <Rank>1</Rank>
+    </resource>
+    <resource rel="" href="/api/employees/11">
+      <Id>11</Id>
+      <Title>emp2</Title>
+      <Rank>2</Rank>
+    </resource>
+    <resource rel="" href="/api/employees/12">
+      <Id>12</Id>
+      <Title>emp1</Title>
+      <Rank>4</Rank>
+    </resource>
+  </resource>
+</resource>
