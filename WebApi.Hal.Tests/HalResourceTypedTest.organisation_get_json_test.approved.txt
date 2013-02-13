@@ -1,7 +1,7 @@
 {
-  "Id": 1,
-  "Name": "Org Name",
-  "Employees": {
+  "id": 1,
+  "name": "Org Name",
+  "employees": {
     "_links": {
       "self": {
         "href": "/api/employees"
@@ -10,9 +10,9 @@
     "_embedded": {
       "employees": [
         {
-          "Id": 1,
-          "Title": "emp1",
-          "Rank": 1,
+          "id": 1,
+          "title": "emp1",
+          "rank": 1,
           "_links": [
             {
               "Rel": "self",
@@ -22,9 +22,9 @@
           ]
         },
         {
-          "Id": 11,
-          "Title": "emp2",
-          "Rank": 2,
+          "id": 11,
+          "title": "emp2",
+          "rank": 2,
           "_links": [
             {
               "Rel": "self",
@@ -34,9 +34,9 @@
           ]
         },
         {
-          "Id": 12,
-          "Title": "emp1",
-          "Rank": 4,
+          "id": 12,
+          "title": "emp1",
+          "rank": 4,
           "_links": [
             {
               "Rel": "self",

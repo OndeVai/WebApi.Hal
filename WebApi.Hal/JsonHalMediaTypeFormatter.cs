@@ -27,12 +27,12 @@ namespace WebApi.Hal
 
         public override bool CanReadType(Type type)
         {
-            return typeof (Representation).IsAssignableFrom(type);
+            return type.IsResource();
         }
 
         public override bool CanWriteType(Type type)
         {
-            return typeof (Representation).IsAssignableFrom(type);
+            return type.IsResource();
         }
     }
 }

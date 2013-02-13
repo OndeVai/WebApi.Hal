@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using ApprovalTests;
 using ApprovalTests.Reporters;
+using Newtonsoft.Json.Serialization;
 using WebApi.Hal.Tests.Representations;
 using Xunit;
 
@@ -33,11 +34,15 @@ namespace WebApi.Hal.Tests
         }
 
         [Fact]
-        [UseReporter(typeof (DiffReporter))]
+        [UseReporter(typeof(DiffReporter))]
         public void organisation_get_json_test()
         {
             // arrange
-            var mediaFormatter = new JsonHalMediaTypeFormatter {Indent = true};
+            var mediaFormatter = new JsonHalMediaTypeFormatter
+            {
+                Indent = true,
+                SerializerSettings = { ContractResolver = new CamelCasePropertyNamesContractResolver() }
+            };
             var content = new StringContent(string.Empty);
             var type = resource.GetType();
 
@@ -54,7 +59,7 @@ namespace WebApi.Hal.Tests
         }
 
         [Fact]
-        [UseReporter(typeof (DiffReporter))]
+        [UseReporter(typeof(DiffReporter))]
         public void organisation_get_xml_test()
         {
             // arrange

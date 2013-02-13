@@ -117,7 +117,7 @@ namespace WebApi.Hal
                 {
                     type.SetPropertyValue(property.Name, xml.Element(property.Name), representation);
                 }
-                else if (typeof (Representation).IsAssignableFrom(property.PropertyType) &&
+                else if (property.PropertyType.IsResource() &&
                          property.GetIndexParameters().Length == 0)
                 {
                     var resourceXml =
@@ -235,12 +235,12 @@ namespace WebApi.Hal
 
         public override bool CanReadType(Type type)
         {
-            return typeof (Representation).IsAssignableFrom(type);
+            return type.IsResource();
         }
 
         public override bool CanWriteType(Type type)
         {
-            return typeof (Representation).IsAssignableFrom(type);
+            return type.IsResource();
         }
     }
 }
