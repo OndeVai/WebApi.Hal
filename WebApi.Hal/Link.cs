@@ -18,15 +18,28 @@ namespace WebApi.Hal
         {
             Rel = rel;
             Href = href;
-            if (href != null)
-                IsTemplated = Regex.Match(href, @"{\w+}", RegexOptions.Compiled).Success;
+           
         }
+
+
 
         public string Rel { get; set; }
 
         public string Href { get; set; }
 
-        public bool IsTemplated { get; set; }
+        public bool IsTemplated
+        {
+            get
+            {
+                return Href != null && Regex.Match(Href, @"{\w+}", RegexOptions.Compiled).Success;
+            }
+        }
+
+        public Link UpdateRel(string rel)
+        {
+            Rel = rel;
+            return this;
+        }
 
         /// <summary>
         ///     If this link is templated, you can use this method to make a non templated copy
@@ -66,7 +79,7 @@ namespace WebApi.Hal
                 href = href.Replace(string.Format("{{{0}}}", name), substituionValue);
             }
 
-            return new Uri(href, UriKind.Relative);
+            return new Uri(href, UriKind.RelativeOrAbsolute);
         }
     }
 }
