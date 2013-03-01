@@ -16,11 +16,11 @@ namespace WebApi.Hal.Tests
 {
     public class HalResourceTypedTest
     {
-        readonly OrganisationRepresentationTyped resource;
+        readonly EmployeeRepresentationList resource;
 
         public HalResourceTypedTest()
         {
-            var model = new Organisation(1, "Org Name");
+           
             var emps = new List<Employee>
             {
                 new Employee(1, "emp1", 1),
@@ -29,8 +29,8 @@ namespace WebApi.Hal.Tests
             };
 
             var employeeRepresentations = emps.Select(e => new EmployeeRepresentation(e)).ToList();
-            model.Employees = new EmployeeRepresentationList(employeeRepresentations);
-            resource = new OrganisationRepresentationTyped(model);
+            resource = new EmployeeRepresentationList(employeeRepresentations);
+           
         }
 
         [Fact]

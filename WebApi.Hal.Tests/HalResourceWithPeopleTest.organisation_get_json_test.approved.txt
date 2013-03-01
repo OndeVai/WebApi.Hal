@@ -6,7 +6,8 @@
       "href": "/api/organisations/1"
     },
     "people": {
-      "href": "/api/organisations/1/people"
+      "href": "/api/organisations/1/people",
+      "title": "see org people"
     }
   }
 }

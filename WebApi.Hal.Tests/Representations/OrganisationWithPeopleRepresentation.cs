@@ -23,7 +23,8 @@ namespace WebApi.Hal.Tests.Representations
             Links.Add(new Link
             {
                 Rel = "people",
-                Href = string.Format("/api/organisations/{0}/people", Id)
+                Href = string.Format("/api/organisations/{0}/people", Id),
+                Title = "see org people"
             });
         }
     }

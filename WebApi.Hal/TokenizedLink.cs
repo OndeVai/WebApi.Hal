@@ -23,8 +23,8 @@ namespace WebApi.Hal
             _origHref = href;
             _hrefQueryStringStartPosition = PositionInHref(HrefQueryStringStart, this);
             _hrefQueryString = _hrefQueryStringStartPosition > -1
-                                  ? _origHref.Substring(_hrefQueryStringStartPosition)
-                                  : string.Empty;
+                                   ? _origHref.Substring(_hrefQueryStringStartPosition)
+                                   : string.Empty;
         }
 
 
@@ -70,7 +70,7 @@ namespace WebApi.Hal
 
                 var queryVals =
                     link._hrefQueryString.Split(new[] {HrefQueryStringStart, HrefQueryStringAppend},
-                                          StringSplitOptions.RemoveEmptyEntries).ToList();
+                                                StringSplitOptions.RemoveEmptyEntries).ToList();
                 queryVals.RemoveAll(v => v.Contains(token));
 
                 var newQueryVals = string.Join(HrefQueryStringAppend, queryVals);

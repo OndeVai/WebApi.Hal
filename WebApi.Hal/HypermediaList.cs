@@ -11,8 +11,8 @@ namespace WebApi.Hal
 {
     public class HypermediaList : IList<Link>
     {
-        readonly List<Link> innerList;
-        readonly Action onEnumerate;
+        private readonly List<Link> innerList;
+        private readonly Action onEnumerate;
 
         public HypermediaList(Action onEnumerate)
         {

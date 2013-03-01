@@ -13,7 +13,7 @@ namespace WebApi.Hal
     public abstract class RepresentationList<T> : Representation, IRepresentationList, IEnumerable<T>
         where T : Representation
     {
-        readonly IList<T> resources;
+        private readonly IList<T> resources;
 
         protected RepresentationList(IList<T> res)
         {

@@ -16,10 +16,10 @@ namespace WebApi.Hal.JsonConverters
             var list = (IRepresentationList) value;
 
             list.Links.Add(new Link
-            {
-                Rel = "self",
-                Href = list.Href
-            });
+                {
+                    Rel = "self",
+                    Href = list.Href
+                });
 
             writer.WriteStartObject();
             writer.WritePropertyName("_links");

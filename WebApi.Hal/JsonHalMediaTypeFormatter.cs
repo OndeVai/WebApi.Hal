@@ -11,23 +11,21 @@ namespace WebApi.Hal
 {
     public class JsonHalMediaTypeFormatter : JsonMediaTypeFormatter
     {
-        readonly LinksConverter linksConverter = new LinksConverter();
-        readonly ResourceConverter resourceConverter = new ResourceConverter();
-        readonly ResourceListConverter resourceListConverter = new ResourceListConverter();
-        readonly ResourceTypedConverter typedResourceConverter = new ResourceTypedConverter();
+        private readonly LinksConverter _linksConverter = new LinksConverter();
+        private readonly ResourceConverter _resourceConverter = new ResourceConverter();
+        private readonly ResourceListConverter _resourceListConverter = new ResourceListConverter();
 
         public JsonHalMediaTypeFormatter()
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/hal+json"));
-            SerializerSettings.Converters.Add(linksConverter);
-            SerializerSettings.Converters.Add(resourceListConverter);
-            SerializerSettings.Converters.Add(resourceConverter);
-            SerializerSettings.Converters.Add(typedResourceConverter);
+            SerializerSettings.Converters.Add(_linksConverter);
+            SerializerSettings.Converters.Add(_resourceListConverter);
+            SerializerSettings.Converters.Add(_resourceConverter);
         }
 
         public override bool CanReadType(Type type)
         {
-            return type.IsResource();
+            return type.IsResource() && !type.IsResourceTyped();
         }
 
         public override bool CanWriteType(Type type)

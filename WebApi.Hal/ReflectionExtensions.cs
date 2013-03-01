@@ -11,9 +11,9 @@ using WebApi.Hal.Interfaces;
 
 namespace WebApi.Hal
 {
-    static class ReflectionExtensions
+    internal static class ReflectionExtensions
     {
-        static readonly string[] NonSerializedProperties = new[] {"Rel", "Href", "LinkName"};
+        private static readonly string[] NonSerializedProperties = new[] {"Rel", "Href", "LinkName", "LinkTitle"};
 
         public static bool IsValidBasicType(this PropertyInfo property)
         {
@@ -103,8 +103,9 @@ namespace WebApi.Hal
             type.SetPropertyValueFromString(propertyName, element.Value, instance);
         }
 
-        static void SetPropertyValueFromString<T>(this PropertyInfo property, Func<string, T> conversion, string value,
-                                                  object instance)
+        private static void SetPropertyValueFromString<T>(this PropertyInfo property, Func<string, T> conversion,
+                                                          string value,
+                                                          object instance)
         {
             var convertedValue = value == null ? default(T) : conversion(value);
 
@@ -131,7 +132,7 @@ namespace WebApi.Hal
             return propertyInfo.Name == "Model";
         }
 
-         /// <summary>
+        /// <summary>
         ///     Determines whether the <paramref name="genericType" /> is assignable from
         ///     <paramref name="givenType" /> taking into account generic definitions
         /// </summary>
@@ -148,7 +149,7 @@ namespace WebApi.Hal
                    || givenType.BaseType.IsAssignableToGenericType(genericType);
         }
 
-        static bool HasInterfaceThatMapsToGenericTypeDefinition(this Type givenType, Type genericType)
+        private static bool HasInterfaceThatMapsToGenericTypeDefinition(this Type givenType, Type genericType)
         {
             return givenType
                 .GetInterfaces()
@@ -156,12 +157,11 @@ namespace WebApi.Hal
                 .Any(it => it.GetGenericTypeDefinition() == genericType);
         }
 
-        static bool MapsToGenericTypeDefinition(this Type givenType, Type genericType)
+        private static bool MapsToGenericTypeDefinition(this Type givenType, Type genericType)
         {
             return genericType.IsGenericTypeDefinition
                    && givenType.IsGenericType
                    && givenType.GetGenericTypeDefinition() == genericType;
         }
     }
-    
 }

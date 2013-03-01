@@ -16,11 +16,11 @@ namespace WebApi.Hal
 
     public abstract class Representation : IResource
     {
-        bool creatingHyperMedia;
-        string href;
-        string linkName;
-        string rel;
-        bool selfLinkUpToDate;
+        private bool creatingHyperMedia;
+        private string href;
+        private string linkName;
+        private string rel;
+        private bool selfLinkUpToDate;
 
         protected Representation()
         {
@@ -105,8 +105,13 @@ namespace WebApi.Hal
             }
         }
 
+        [JsonIgnore]
+        public string LinkTitle { get; set; }
+
         [JsonProperty("_links")]
         public IList<Link> Links { get; set; }
+
+        
 
         protected internal abstract void CreateHypermedia();
     }

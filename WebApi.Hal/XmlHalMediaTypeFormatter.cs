@@ -56,7 +56,7 @@ namespace WebApi.Hal
         /// <param name="type">Type of resource - Must be of type ApiResource</param>
         /// <param name="xml">xelement for the type</param>
         /// <returns>returns deserialized object</returns>
-        static object ReadHalResource(Type type, XElement xml)
+        private static object ReadHalResource(Type type, XElement xml)
         {
             Representation representation;
 
@@ -99,17 +99,19 @@ namespace WebApi.Hal
             // Fourth, read each link element
             var links = xml.Elements("link");
             var linksList = links.Select(link => new Link
-            {
-                Rel = link.Attribute("rel").Value,
-                Href = link.Attribute("href").Value
-            }).ToList();
+                {
+                    Rel = link.Attribute("rel").Value,
+                    Href = link.Attribute("href").Value,
+                    Title = link.Attribute("title").Value
+
+                }).ToList();
 
             type.GetProperty("Links").SetValue(representation, linksList, null);
 
             return representation;
         }
 
-        static void SetProperties(Type type, XElement xml, Representation representation)
+        private static void SetProperties(Type type, XElement xml, Representation representation)
         {
             foreach (var property in type.GetPublicInstanceProperties())
             {
@@ -128,14 +130,14 @@ namespace WebApi.Hal
             }
         }
 
-        static void CreateSelfHypermedia(Type type, XElement xml, Representation representation)
+        private static void CreateSelfHypermedia(Type type, XElement xml, Representation representation)
         {
             type.GetProperty("Rel").SetValue(representation, xml.Attribute("rel").Value, null);
             type.SetPropertyValue("Href", xml.Attribute("href"), representation);
             type.SetPropertyValue("LinkName", xml.Attribute("name"), representation);
         }
 
-        static void WriteHalResource(Representation representation, XmlWriter writer, string propertyName = null)
+        private static void WriteHalResource(Representation representation, XmlWriter writer, string propertyName = null)
         {
             if (representation == null)
             {
@@ -144,12 +146,16 @@ namespace WebApi.Hal
 
             // First write the well-known HAL properties
             writer.WriteStartElement("resource");
-            writer.WriteAttributeString("rel", representation.Rel);
+            var rel = string.IsNullOrWhiteSpace(representation.Rel) ? "self" : representation.Rel;
+            writer.WriteAttributeString("rel", rel ??  "self");
             writer.WriteAttributeString("href", representation.Href);
             if (representation.LinkName != null || propertyName != null)
             {
                 writer.WriteAttributeString("name", representation.LinkName = representation.LinkName ?? propertyName);
             }
+
+            if (!string.IsNullOrWhiteSpace(representation.LinkTitle))
+                writer.WriteAttributeString("title", representation.LinkTitle);
 
             // Second, determine if resource is of Generic Resource List Type , list out all the items
             var representationList = representation as IRepresentationList;
@@ -167,6 +173,9 @@ namespace WebApi.Hal
                 writer.WriteStartElement("link");
                 writer.WriteAttributeString("rel", link.Rel);
                 writer.WriteAttributeString("href", link.Href);
+                if(!string.IsNullOrWhiteSpace(link.Title))
+                    writer.WriteAttributeString("title", link.Title);
+
                 writer.WriteEndElement();
             }
 
@@ -176,7 +185,7 @@ namespace WebApi.Hal
             writer.WriteEndElement();
         }
 
-        static void WriteResourceProperties(Representation value, XmlWriter writer)
+        private static void WriteResourceProperties(Representation value, XmlWriter writer)
         {
             var resourceType = value.GetType();
             var allProps = resourceType.GetPublicInstanceProperties();
@@ -198,7 +207,8 @@ namespace WebApi.Hal
             }
         }
 
-        static void WriteResourceProperties(object value, XmlWriter writer, IEnumerable<PropertyInfo> propertyInfos)
+        private static void WriteResourceProperties(object value, XmlWriter writer,
+                                                    IEnumerable<PropertyInfo> propertyInfos)
         {
             // Only simple type and nested ApiResource type will be handled : for any other type, exception will be thrown
             // including List<ApiResource> as representation of List would require properties rel, href and linkname
@@ -222,7 +232,7 @@ namespace WebApi.Hal
             }
         }
 
-        static string GetPropertyString(PropertyInfo property, object instance)
+        private static string GetPropertyString(PropertyInfo property, object instance)
         {
             var propertyValue = property.GetValue(instance, null);
             if (propertyValue != null)

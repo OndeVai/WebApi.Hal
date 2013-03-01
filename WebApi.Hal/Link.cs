@@ -18,26 +18,29 @@ namespace WebApi.Hal
         {
             Rel = rel;
             Href = href;
-           
         }
 
 
-
         public string Rel { get; set; }
+
+        public string Title { get; set; }
 
         public string Href { get; set; }
 
         public bool IsTemplated
         {
-            get
-            {
-                return Href != null && Regex.Match(Href, @"{\w+}", RegexOptions.Compiled).Success;
-            }
+            get { return Href != null && Regex.Match(Href, @"{\w+}", RegexOptions.Compiled).Success; }
         }
 
         public Link UpdateRel(string rel)
         {
             Rel = rel;
+            return this;
+        }
+
+        public Link UpdateTitle(string title)
+        {
+            Title = title;
             return this;
         }
 

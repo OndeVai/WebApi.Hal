@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web;
 using Newtonsoft.Json;
 
 #endregion
@@ -28,6 +27,13 @@ namespace WebApi.Hal.JsonConverters
                     writer.WritePropertyName("isTemplated");
                     writer.WriteValue(true);
                 }
+
+                if (!string.IsNullOrWhiteSpace(link.Title))
+                {
+                    writer.WritePropertyName("title");
+                    writer.WriteValue(link.Title);
+                }
+                
 
                 writer.WriteEndObject();
             }
